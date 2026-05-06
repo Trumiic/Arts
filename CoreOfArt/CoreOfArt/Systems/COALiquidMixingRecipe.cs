@@ -73,8 +73,8 @@ namespace CoreOfArts.Systems
         [DocumentAsJson] public string Code;
 
 
-        IRecipeIngredient[] IRecipeBase<COALiquidMixingRecipe>.Ingredients => Ingredients;
-        IRecipeOutput IRecipeBase<COALiquidMixingRecipe>.Output => Output;
+        IRecipeIngredient[] IRecipeBase.Ingredients => Ingredients;
+        IRecipeOutput IRecipeBase.Output => Output;
 
         public bool TryCraftNow(ICoreAPI api, ItemSlot itemslot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, COALiquidMixingRecipe recipe)
         {
