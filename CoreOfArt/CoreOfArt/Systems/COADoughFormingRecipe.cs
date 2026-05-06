@@ -33,12 +33,12 @@ namespace CoreOfArts.Systems
             return recipe;
         }
 
-        public void ToBytes(BinaryWriter writer)
+        public override void ToBytes(BinaryWriter writer)
         {
             base.ToBytes(writer);
         }
 
-        public void FromBytes(BinaryReader reader, IWorldAccessor resolver)
+        public override void FromBytes(BinaryReader reader, IWorldAccessor resolver)
         {
             base.FromBytes(reader, resolver);
         }
