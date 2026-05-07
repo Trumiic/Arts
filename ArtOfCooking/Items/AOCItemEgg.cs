@@ -167,7 +167,7 @@ namespace ArtOfCooking.Items
                     if (byEntity is EntityPlayer) byPlayer = world.PlayerByUid(((EntityPlayer)byEntity).PlayerUID);
                     if (byPlayer?.InventoryManager.TryGiveItemstack(eggshellStack) == false)
                     {
-                        byEntity.World.SpawnItemEntity(eggshellStack, byEntity.SidedPos.XYZ);
+                        byEntity.World.SpawnItemEntity(eggshellStack, byEntity.Pos.XYZ);
                     }
 
                     if (byEntity.World.Side == EnumAppSide.Client)
