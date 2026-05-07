@@ -30,9 +30,9 @@ namespace CoreOfArts.Systems
             {
                 if (recipe != null)
                 {
-                    ItemStack sourceStack = recipe.Ingredients[0].ResolvedItemstack;
-                    ItemStack inputStack = recipe.Ingredients[1].ResolvedItemstack;
-                    ItemStack outputStack = recipe.Output.ResolvedItemstack;
+                    ItemStack sourceStack = recipe.Ingredients[0].ResolvedItemStack;
+                    ItemStack inputStack = recipe.Ingredients[1].ResolvedItemStack;
+                    ItemStack outputStack = recipe.Output.ResolvedItemStack;
                     if (sourceStack != null && inputStack != null && outputStack != null
                         && outputStack.Equals(capi.World, inSlot.Itemstack, GlobalConstants.IgnoredStackAttributes))
                         mixed.Add(recipe);
@@ -96,7 +96,7 @@ namespace CoreOfArts.Systems
                     {
                         if (rec != null)
                         {
-                            ItemStack sourceStack = rec.Ingredients[0].ResolvedItemstack;
+                            ItemStack sourceStack = rec.Ingredients[0].ResolvedItemStack;
                             if (sourceStack.Collectible.Attributes?["waterTightContainerProps"].Exists == true)
                             {
                                 var props = BlockLiquidContainerBase.GetContainableProps(sourceStack);
@@ -107,7 +107,7 @@ namespace CoreOfArts.Systems
                                 sourceStack.StackSize = 1;
                             }
 
-                            ItemStack inputStack = rec.Ingredients[1].ResolvedItemstack;
+                            ItemStack inputStack = rec.Ingredients[1].ResolvedItemStack;
                             if (inputStack.Collectible.Attributes?["waterTightContainerProps"].Exists == true)
                             {
                                 var props = BlockLiquidContainerBase.GetContainableProps(inputStack);
@@ -244,9 +244,9 @@ namespace CoreOfArts.Systems
             {
                 if (recipe != null)
                 {
-                    ItemStack sourceStack = recipe.Ingredients[0].ResolvedItemstack;
-                    ItemStack inputStack = recipe.Ingredients[1].ResolvedItemstack;
-                    ItemStack outputStack = recipe.Output.ResolvedItemstack;
+                    ItemStack sourceStack = recipe.Ingredients[0].ResolvedItemStack;
+                    ItemStack inputStack = recipe.Ingredients[1].ResolvedItemStack;
+                    ItemStack outputStack = recipe.Output.ResolvedItemStack;
 
                     if (sourceStack.Equals(capi.World, inSlot.Itemstack, GlobalConstants.IgnoredStackAttributes)
                         && !recipestacks.Any(s => s.Equals(capi.World, outputStack, GlobalConstants.IgnoredStackAttributes)))
@@ -260,7 +260,7 @@ namespace CoreOfArts.Systems
             foreach (var val in capi.GetDoughformingRecipes())
             {
                 if (val.Ingredient.SatisfiesAsIngredient(inSlot.Itemstack)
-                    && !recipestacks.Any(s => s.Equals(capi.World, val.Output.ResolvedItemstack, GlobalConstants.IgnoredStackAttributes)))
+                    && !recipestacks.Any(s => s.Equals(capi.World, val.Output.ResolvedItemStack, GlobalConstants.IgnoredStackAttributes)))
                 {
                     recipestacks.Add(val.Output.ResolvedItemstack);
                 }
