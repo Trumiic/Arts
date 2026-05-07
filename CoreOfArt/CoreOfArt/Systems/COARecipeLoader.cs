@@ -68,82 +68,34 @@ namespace CoreOfArts.Systems
             if (!recipe.Enabled) return;
             if (recipe.Name == null) recipe.Name = path;
 
-            Dictionary<string, string[]> nameToCodeMapping = recipe.GetNameToCodeMapping(api.World);
+            recipe.OnParsed(api.World);
 
-            if (nameToCodeMapping.Count > 0)
+            bool generatedAny = false;
+
+            foreach (IRecipeBase generatedRecipeBase in recipe.GenerateRecipesForAllIngredientCombinations(api.World))
             {
-                List<T> subRecipes = new List<T>();
+                generatedAny = true;
 
-                int qCombs = 0;
-                bool first = true;
-                foreach (var val2 in nameToCodeMapping)
+                if (generatedRecipeBase.Name == null)
                 {
-                    if (first) qCombs = val2.Value.Length;
-                    else qCombs *= val2.Value.Length;
-                    first = false;
+                    generatedRecipeBase.Name = path;
                 }
 
-                first = true;
-                foreach (var val2 in nameToCodeMapping)
-                {
-                    string variantCode = val2.Key;
-                    string[] variants = val2.Value;
-
-                    for (int i = 0; i < qCombs; i++)
-                    {
-                        T rec;
-
-                        if (first) subRecipes.Add(rec = recipe.Clone());
-                        else rec = subRecipes[i];
-
-                        if (rec.Ingredients != null)
-                        {
-                            foreach (var ingred in rec.Ingredients)
-                            {
-                                if (ingred.Name == variantCode)
-                                {
-                                    ingred.Code = ingred.Code.CopyWithPath(ingred.Code.Path.Replace("*", variants[i % variants.Length]));
-                                }
-                            }
-                        }
-
-                        rec.Output.FillPlaceHolder(val2.Key, variants[i % variants.Length]);
-                    }
-
-                    first = false;
-                }
-
-                if (subRecipes.Count == 0)
-                {
-                    api.World.Logger.Warning("{1} file {0} make uses of wildcards, but no blocks or item matching those wildcards were found.", path, className);
-                }
-
-                foreach (T subRecipe in subRecipes)
-                {
-                    if (!subRecipe.Resolve(api.World, className + " " + path))
-                    {
-                        quantityIgnored++;
-                        continue;
-                    }
-                    RegisterMethod(subRecipe);
-                    quantityRegistered++;
-                }
-
-            }
-            else
-            {
-                if (!recipe.Resolve(api.World, className + " " + path))
+                if (!generatedRecipeBase.Resolve(api.World, className + " " + path))
                 {
                     quantityIgnored++;
-                    return;
+                    continue;
                 }
 
-                RegisterMethod(recipe);
+                RegisterMethod((T)generatedRecipeBase);
                 quantityRegistered++;
             }
-        }
-    }
 
+            if (!generatedAny)
+            {
+                api.World.Logger.Warning("{1} file {0} could not generate any recipe variants.", path, className);
+            }
+        }
     public static class AOCApiAdditions
     {
         public static List<COADoughFormingRecipe> GetDoughformingRecipes(this ICoreAPI api)
