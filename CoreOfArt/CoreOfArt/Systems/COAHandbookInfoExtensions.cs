@@ -118,7 +118,7 @@ namespace CoreOfArts.Systems
                                 inputStack.StackSize = 1;
                             }
 
-                            ItemStack outputStack = rec.Output.ResolvedItemstack;
+                            ItemStack outputStack = rec.Output.ResolvedItemStack;
                             if (outputStack.Collectible.Attributes?["waterTightContainerProps"].Exists == true)
                             {
                                 var props = BlockLiquidContainerBase.GetContainableProps(outputStack);
@@ -262,7 +262,7 @@ namespace CoreOfArts.Systems
                 if (val.Ingredient.SatisfiesAsIngredient(inSlot.Itemstack)
                     && !recipestacks.Any(s => s.Equals(capi.World, val.Output.ResolvedItemStack, GlobalConstants.IgnoredStackAttributes)))
                 {
-                    recipestacks.Add(val.Output.ResolvedItemstack);
+                    recipestacks.Add(val.Output.ResolvedItemStack);
                 }
             }
 
@@ -363,7 +363,7 @@ namespace CoreOfArts.Systems
 
             foreach (var val in capi.GetDoughformingRecipes())
             {
-                if (val.Output.ResolvedItemstack.Equals(capi.World, inSlot.Itemstack, GlobalConstants.IgnoredStackAttributes))
+                if (val.Output.ResolvedItemStack.Equals(capi.World, inSlot.Itemstack, GlobalConstants.IgnoredStackAttributes))
                 {
                     doughformable = true;
                     break;
@@ -394,7 +394,7 @@ namespace CoreOfArts.Systems
             List<CookingRecipe> secondcookrecipes = new List<CookingRecipe>();
             foreach (var val in capi.GetCookingRecipes())
             {
-                if (val.CooksInto?.ResolvedItemstack == null)
+                if (val.CooksInto?.ResolvedItemStack == null)
                 {
                     foreach (var ingred in val.Ingredients)
                     {
