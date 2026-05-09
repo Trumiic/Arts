@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System;
 using Vintagestory.API;
 using Vintagestory.API.Common;
 using Vintagestory.API.Util;
@@ -34,7 +35,8 @@ namespace CoreOfArts.Systems
     ///  }
     ///}</code></example>
     [DocumentAsJson]
-    public class COALiquidMixingRecipe : IByteSerializable, IRecipeBase
+
+    public class COALiquidMixingRecipe : IByteSerializable, IRecipeBase, ICloneable, ICOARecipe
     {
         /// <summary>
         /// <!--<jsonoptional>Obsolete</jsonoptional>-->
@@ -74,8 +76,22 @@ namespace CoreOfArts.Systems
         [DocumentAsJson] public string Code;
 
 
-        public IEnumerable<IRecipeIngredient> RecipeIngredients => Ingredients;
-        public IRecipeOutput RecipeOutput => Output;
+        IEnumerable<IRecipeIngredient> IRecipeBase.RecipeIngredients => Ingredients;
+        IRecipeOutput IRecipeBase.RecipeOutput => Output;
+
+        // 1.22
+        int IRecipeBase.RecipeId { get => RecipeId; set => RecipeId = value; }
+        public bool AverageDurability { get; set; } = true;
+        public string RequiresTrait { get; set; }
+        public bool ShowInCreatedBy { get; set; } = true;
+        public void OnParsed(IWorldAccessor world) { }
+        public IEnumerable<IRecipeBase> GenerateRecipesForAllIngredientCombinations(IWorldAccessor world)
+            => new[] { (IRecipeBase)this };
+
+        IRecipeIngredient[] ICOARecipe.Ingredients => Ingredients;
+        IRecipeOutput ICOARecipe.Output => Output;
+        object ICloneable.Clone() => Clone();
+        ICOARecipe ICOARecipe.Clone() => Clone();
 
         public bool TryCraftNow(ICoreAPI api, ItemSlot itemslot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, COALiquidMixingRecipe recipe)
         {

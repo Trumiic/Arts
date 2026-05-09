@@ -15,6 +15,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
+using OrderedDictionaryBP = Vintagestory.API.Datastructures.OrderedDictionary<Vintagestory.API.MathTools.BlockPos, float>;
 
 namespace ArtOfGrowing.Items
 {
@@ -74,7 +75,7 @@ namespace ArtOfGrowing.Items
             if (!CanMultiBreak(block)) return;
 
             Vec3d hitPos = blockSel.Position.ToVec3d().Add(blockSel.HitPosition);
-            OrderedDictionary<BlockPos, float> dict = GetNearblyMultibreakables(player.Entity.World, blockSel.Position, hitPos);
+            OrderedDictionaryBP dict = GetNearblyMultibreakables(player.Entity.World, blockSel.Position, hitPos);
             var orderedPositions = dict.OrderBy(x => x.Value).Select(x => x.Key);
 
             int q = Math.Min(MultiBreakQuantity, leftDurability);

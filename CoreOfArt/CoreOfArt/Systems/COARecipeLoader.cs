@@ -10,6 +10,13 @@ using Vintagestory.GameContent;
 
 namespace CoreOfArts.Systems
 {
+    public interface ICOARecipe : IRecipeBase
+    {
+        IRecipeIngredient[] Ingredients { get; }
+        IRecipeOutput Output { get; }
+        new ICOARecipe Clone();
+    }
+
     public class COARecipeLoader : ModSystem
     {
         ICoreServerAPI api;
@@ -35,8 +42,7 @@ namespace CoreOfArts.Systems
 
             sapi.World.Logger.StoryEvent(Lang.Get("Kneaded dough..."));
         }
-
-        public void LoadRecipes<T>(string name, string path, Action<T> RegisterMethod) where T : IRecipeBase
+        public void LoadRecipes<T>(string name, string path, Action<T> RegisterMethod) where T : class, ICOARecipe
         {
             Dictionary<AssetLocation, JToken> files = api.Assets.GetMany<JToken>(api.Server.Logger, path);
             int recipeQuantity = 0;
@@ -64,14 +70,57 @@ namespace CoreOfArts.Systems
             api.World.Logger.Event("{0} {1}s loaded{2}", quantityRegistered, name, quantityIgnored > 0 ? string.Format(" ({0} could not be resolved)", quantityIgnored) : "");
         }
 
-        void LoadGenericRecipe<T>(string className, AssetLocation path, T recipe, Action<T> RegisterMethod, ref int quantityRegistered, ref int quantityIgnored) where T : IRecipeBase
+
+        void LoadGenericRecipe<T>(string className, AssetLocation path, T recipe, Action<T> RegisterMethod, ref int quantityRegistered, ref int quantityIgnored) where T : class, ICOARecipe
         {
             if (!recipe.Enabled) return;
             if (recipe.Name == null) recipe.Name = path;
 
-            recipe.OnParsed(api.World);
+            Dictionary<string, string[]> nameToCodeMapping = (recipe as COALiquidMixingRecipe)?.GetNameToCodeMapping(api.World) 
+                ?? new Dictionary<string, string[]>();
 
-            bool generatedAny = false;
+
+            if (nameToCodeMapping.Count > 0)
+            {
+                List<T> subRecipes = new List<T>();
+
+                int qCombs = 0;
+                bool first = true;
+                foreach (var val2 in nameToCodeMapping)
+                {
+                    if (first) qCombs = val2.Value.Length;
+                    else qCombs *= val2.Value.Length;
+                    first = false;
+                }
+
+                first = true;
+                foreach (var val2 in nameToCodeMapping)
+                {
+                    string variantCode = val2.Key;
+                    string[] variants = val2.Value;
+                    for (int i = 0; i < qCombs; i++)
+                    {
+                        T rec;
+
+                        if (first) subRecipes.Add(rec = (T)recipe.Clone()); // fixed object conversion for 1.22
+                        else rec = subRecipes[i];
+
+                        if (rec.Ingredients != null)
+                        {
+                            foreach (var ingred in rec.Ingredients)
+                            {
+                                if (ingred.Name == variantCode)
+                                {
+                                    ingred.Code = ingred.Code.CopyWithPath(ingred.Code.Path.Replace("*", variants[i % variants.Length]));
+                                }
+                            }
+                        }
+
+                        rec.Output.FillPlaceHolder(val2.Key, variants[i % variants.Length]);
+                    }
+
+                    first = false;
+                }
 
             foreach (IRecipeBase generatedRecipeBase in recipe.GenerateRecipesForAllIngredientCombinations(api.World))
             {
