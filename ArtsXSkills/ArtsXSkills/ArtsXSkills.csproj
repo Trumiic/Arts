@@ -52,6 +52,7 @@
     </Reference>
     <Reference Include="xskills">
       <HintPath>..\xskills.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 
