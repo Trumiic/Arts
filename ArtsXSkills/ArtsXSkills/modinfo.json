@@ -1,7 +1,7 @@
 {
   "type": "code",
-  "modid": "artsxskillspatch",
-  "name": "ArtsXSkills",
+  "modid": "artsxskillsrevival",
+  "name": "ArtsXSkills Revival",
   "authors": [
     "Fedarmens"
   ],
@@ -9,7 +9,7 @@
   "version": "1.1.1",
     "dependencies": {
         "game": "",
-        "coreofartspatch": "",
+        "coreofartsrevival": "",
         "xskills": ""
     }
 }
