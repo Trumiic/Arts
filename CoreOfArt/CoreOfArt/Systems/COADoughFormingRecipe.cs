@@ -49,16 +49,16 @@ namespace CoreOfArts.Systems
 
     return ok;
 }
-protected override Dictionary<string, string[]> GetNameToCodeMapping(IWorldAccessor world)
+protected override Dictionary<string, HashSet<string>> GetNameToCodeMapping(IWorldAccessor world)
 {
-    Dictionary<string, string[]> mappings = new Dictionary<string, string[]>();
+    Dictionary<string, HashSet<string>> mappings = new Dictionary<string, HashSet<string>>();
 
     if (Ingredient?.Code == null || Ingredient.Name == null || !Ingredient.Code.Path.Contains("*"))
     {
         return mappings;
     }
 
-    List<string> codes = new List<string>();
+    HashSet<string> codes = new HashSet<string>();
 
     int wildcardStartLen = Ingredient.Code.Path.IndexOf("*");
     int wildcardEndLen = Ingredient.Code.Path.Length - wildcardStartLen - 1;
@@ -98,7 +98,7 @@ protected override Dictionary<string, string[]> GetNameToCodeMapping(IWorldAcces
         }
     }
 
-    mappings[Ingredient.Name] = codes.ToArray();
+    mappings[Ingredient.Name] = codes;
 
     return mappings;
 }
