@@ -102,6 +102,10 @@ protected override Dictionary<string, HashSet<string>> GetNameToCodeMapping(IWor
 
     return mappings;
 }
+    public Dictionary<string, HashSet<string>> GetNameToCodeMappingForLoader(IWorldAccessor world)
+        {
+    return GetNameToCodeMapping(world);
+        }
         public override RecipeBase Clone()
         {
             COADoughFormingRecipe recipe = new COADoughFormingRecipe();
