@@ -76,10 +76,10 @@ namespace CoreOfArts.Systems
             if (recipe.Name == null) recipe.Name = path;
 
             Dictionary<string, string[]> nameToCodeMapping =
-    (recipe as COADoughFormingRecipe)?.GetNameToCodeMapping(api.World)
+    ((recipe as COADoughFormingRecipe)?.GetNameToCodeMappingForLoader(api.World))
+        ?.ToDictionary(val => val.Key, val => val.Value.ToArray())
     ?? (recipe as COALiquidMixingRecipe)?.GetNameToCodeMapping(api.World)
     ?? new Dictionary<string, string[]>();
-
 
             if (nameToCodeMapping.Count > 0)
             {
