@@ -1,12 +1,12 @@
 {
   "type": "content",
-  "modid": "aogbreedingaddonrevival",
+  "modid": "aogbreedingaddonpatch",
   "name": "Art of Growing: Breeding Addon Revival",
   "authors": [
     "Fedarmens"
   ],
   "description": "Cultivation of plants from wild to cultivated varieties.",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "dependencies": {
     "game": "",
     "coreofartsrevival": "",
